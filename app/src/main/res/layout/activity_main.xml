@@ -6,19 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:id="@+id/app_toolbar"
+        tools:ignore="MissingConstraints" />
+
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="64dp"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp">
         <!--android:background="@color/black"-->
 
         <ImageView
             android:layout_width="347dp"
             android:layout_height="269dp"
-            android:layout_margin="30dp"
             android:layout_gravity="center_horizontal|top"
+            android:layout_margin="30dp"
             android:src="@drawable/loading1" />
 
 
@@ -26,8 +36,8 @@
             android:id="@+id/load_img"
             android:layout_width="347dp"
             android:layout_height="269dp"
-            android:layout_margin="30dp"
             android:layout_gravity="center_horizontal|top"
+            android:layout_margin="30dp"
             android:baselineAligned="false" />
 
 
@@ -68,8 +78,6 @@
                        android:text="Button" />
                 -->
     </FrameLayout>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

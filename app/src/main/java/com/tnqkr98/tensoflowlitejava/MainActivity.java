@@ -6,8 +6,10 @@ import androidx.core.content.ContextCompat;
 import androidx.core.os.HandlerCompat;
 
 import android.Manifest;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     String siren="Police car (siren)";
     String speech="Speech";
     String car="Vehicle horn, car horn, honking";
-
+    String cars="car";
     String f;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
         findViewById(R.id.detect_button).setOnClickListener(StartClick); // 스타트 리스너
         findViewById(R.id.stop_button).setOnClickListener(StopClick);
+
 
     }
     Button.OnClickListener StartClick = new View.OnClickListener()
@@ -112,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
     };
     private void startAudioClassification()
     {
-        String b="Finger snapping";
 
         if(mAudioClassifier != null) return;
 
@@ -150,11 +152,15 @@ public class MainActivity extends AppCompatActivity {
                             sendNotification();
 
                         }
-                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(car)==true)
+                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(car)==true || c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(cars)==true)
                         {
                             Log.d("test", " 소리 : " + c.getLabel() + " score : " + c.getScore());
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(2000);
+
+
+
+                            sendNotification();
                         }
                     }
 
@@ -205,19 +211,31 @@ public class MainActivity extends AppCompatActivity {
             notificationChannel.setDescription("Notification from Mascot");
             // Manager을 이용하여 Channel 생성
             mNotificationManager.createNotificationChannel(notificationChannel);
+
         }
 
     }
 
+
     // Notification Builder를 만드는 메소드
     private NotificationCompat.Builder getNotificationBuilder()
     {
+        PendingIntent mPendingIntent = PendingIntent.getActivity(
+                MainActivity.this,
+                0, // 보통 default값 0을 삽입
+                new Intent(getApplicationContext(),MainActivity.class),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
         if (f.equals("speech"))
         {
             NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                     .setContentTitle("말소리")
                     .setContentText("히이이잉")
-                    .setSmallIcon(R.drawable.ambulance);
+                    .setSmallIcon(R.drawable.ambulance)
+                    .setContentIntent(mPendingIntent)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setAutoCancel(true);
+
             return notifyBuilder;
         }
         else if(f.equals("siren"))
@@ -225,7 +243,11 @@ public class MainActivity extends AppCompatActivity {
             NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                     .setContentTitle("사이렌")
                     .setContentText("위이이이잉")
-                    .setSmallIcon(R.drawable.ambulance);
+                    .setSmallIcon(R.drawable.ambulance)
+                    .setContentIntent(mPendingIntent)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setAutoCancel(true);
+
             return notifyBuilder;
         }
 
