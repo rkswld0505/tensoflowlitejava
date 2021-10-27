@@ -22,6 +22,8 @@ import android.os.HandlerThread;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -55,8 +57,11 @@ public class MainActivity extends AppCompatActivity {
     String siren="Police car (siren)";
     String speech="Speech";
     String car="Vehicle horn, car horn, honking";
-    String cars="car";
+    String baby="Baby cry, infant cry";
+    String dog="Dog";
     String f;
+
+    int flag;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -64,6 +69,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(flag==1)
+        {
+            ImageView LoadImg = (ImageView) findViewById(R.id.load_img); //iv.setImageResource(R.drawable.img);
+            Glide.with(LoadImg).load(R.drawable.loading).into(LoadImg);
+
+        }
         HandlerThread handlerThread = new HandlerThread("backgroundThread");
         handlerThread.start();
         mHandler = HandlerCompat.createAsync(handlerThread.getLooper());
@@ -79,10 +90,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+
     Button.OnClickListener StartClick = new View.OnClickListener()
     {
         public void onClick(View v)  //start버튼 눌렀을때
         {
+
             ImageView LoadImg = (ImageView) findViewById(R.id.load_img); //iv.setImageResource(R.drawable.img);
             Glide.with(LoadImg).load(R.drawable.loading).into(LoadImg); //움직이는 로딩img
 
@@ -138,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(2000);
                             Log.d("tensorAudio_java", " label : " + c.getLabel() + " score : " + c.getScore());
-                            Toast.makeText(getApplicationContext(), c.getLabel()+"소리입니다"+c.getScore(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), c.getLabel()+"소리입니다"+c.getScore(), Toast.LENGTH_SHORT).show();
 
                             sendNotification();
                         }
@@ -152,17 +167,49 @@ public class MainActivity extends AppCompatActivity {
                             sendNotification();
 
                         }
-                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(car)==true || c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(cars)==true)
+                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(car)==true)
                         {
-                            Log.d("test", " 소리 : " + c.getLabel() + " score : " + c.getScore());
+                            f="car";
+                            Log.d("차경적", " 소리 : " + c.getLabel() + " score : " + c.getScore());
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(2000);
 
+                            sendNotification();
+                        }
 
+                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(dog)==true)
+                        {
+                            f="dog";
+                            Log.d("강아지", " 소리 : " + c.getLabel() + " score : " + c.getScore());
+                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(2000);
 
                             sendNotification();
                         }
+                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(baby)==true)
+                        {
+                            f="baby";
+                            Log.d("아기울음", " 소리 : " + c.getLabel() + " score : " + c.getScore());
+                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(2000);
+
+                            sendNotification();
+                        }
+                        /*
+                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(silence)==false)
+                        {
+
+                            Log.d("text", " 소리 : " + c.getLabel() + " score : " + c.getScore());
+                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(2000);
+                            Toast.makeText(getApplicationContext(), c.getLabel()+"소리입니다"+c.getScore(), Toast.LENGTH_SHORT).show();
+                            //sendNotification();
+                        }
+
+                         */
+
                     }
+
 
                     mHandler.postDelayed(this,classficationInterval);
                 }
@@ -220,19 +267,24 @@ public class MainActivity extends AppCompatActivity {
     // Notification Builder를 만드는 메소드
     private NotificationCompat.Builder getNotificationBuilder()
     {
-        PendingIntent mPendingIntent = PendingIntent.getActivity(
-                MainActivity.this,
-                0, // 보통 default값 0을 삽입
-                new Intent(getApplicationContext(),MainActivity.class),
-                PendingIntent.FLAG_UPDATE_CURRENT
-        );
+        flag=1;
+        Intent intent= new Intent(this, MainActivity.class)
+
+                .setAction(Intent.ACTION_MAIN)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .addCategory(Intent.CATEGORY_LAUNCHER);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+
+
         if (f.equals("speech"))
         {
             NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
-                    .setContentTitle("말소리")
-                    .setContentText("히이이잉")
-                    .setSmallIcon(R.drawable.ambulance)
-                    .setContentIntent(mPendingIntent)
+                    .setContentTitle("주위에서 말소리가 들려요")
+                    .setContentText("")
+                    .setSmallIcon(R.drawable.dogbark)
+                    .setContentIntent(pendingIntent)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setAutoCancel(true);
 
@@ -242,9 +294,45 @@ public class MainActivity extends AppCompatActivity {
         {
             NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                     .setContentTitle("사이렌")
-                    .setContentText("위이이이잉")
-                    .setSmallIcon(R.drawable.ambulance)
-                    .setContentIntent(mPendingIntent)
+                    .setContentText("주위에 사이렌소리가 들러요")
+                    .setSmallIcon(R.drawable.siren)
+                    .setContentIntent(pendingIntent)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setAutoCancel(true);
+
+            return notifyBuilder;
+        }
+        else if(f.equals("car"))
+        {
+            NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
+                    .setContentTitle("차경적")
+                    .setContentText("주위에 차경적소리가 들러요")
+                    .setSmallIcon(R.drawable.honking)
+                    .setContentIntent(pendingIntent)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setAutoCancel(true);
+
+            return notifyBuilder;
+        }
+        else if(f.equals("dog"))
+        {
+            NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
+                    .setContentTitle("강아지")
+                    .setContentText("강아지가 짖고있어요")
+                    .setSmallIcon(R.drawable.dogbark)
+                    .setContentIntent(pendingIntent)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setAutoCancel(true);
+
+            return notifyBuilder;
+        }
+        else if(f.equals("baby"))
+        {
+            NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
+                    .setContentTitle("아기")
+                    .setContentText("아기가 울고있어요")
+                    .setSmallIcon(R.drawable.babycry)
+                    .setContentIntent(pendingIntent)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setAutoCancel(true);
 
@@ -253,7 +341,6 @@ public class MainActivity extends AppCompatActivity {
 
         return null;
     }
-
     // Notification을 보내는 메소드
     public void sendNotification(){
         // Builder 생성
