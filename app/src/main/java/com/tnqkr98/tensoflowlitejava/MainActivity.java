@@ -28,9 +28,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.progressindicator.IndeterminateDrawable;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+
 import org.tensorflow.lite.support.audio.TensorAudio;
 import org.tensorflow.lite.support.label.Category;
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier;
@@ -41,12 +46,10 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
 
     private static final String MODEL_FILE = "yamnet.tflite";
     private static final float MINIMUM_DISPLAY_THRESHOLD = 0.6f;
-
     private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
     private NotificationManager mNotificationManager;
     private static final int NOTIFICATION_ID = 0;
@@ -72,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        ProgressBar circle_bar = (ProgressBar) findViewById(R.id.circle_bar);
+        circle_bar.setVisibility(View.INVISIBLE);
 
         if (flag == 1) {
 //            ImageView LoadImg = (ImageView) findViewById(R.id.load_img); //iv.setImageResource(R.drawable.img);
@@ -88,155 +93,175 @@ public class MainActivity extends AppCompatActivity {
         int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         if (permission == PackageManager.PERMISSION_DENIED) ;
         createNotificationChannel();
-//        findViewById(R.id.detect_button).setOnClickListener(StartClick); // 스타트 리스너
-//        findViewById(R.id.stop_button).setOnClickListener(StopClick);
+        findViewById(R.id.start_button).setOnClickListener(StartClick); // 스타트 리스너
+        findViewById(R.id.end_button).setOnClickListener(StopClick);
+    }
 
+    Button.OnClickListener StartClick = new View.OnClickListener()
+    {
+        public void onClick(View v)  //start버튼 눌렀을때
+        {
+            Button Btn = (Button) findViewById(R.id.start_button);
+            ProgressBar circle_bar = (ProgressBar) findViewById(R.id.circle_bar);
+            circle_bar.setVisibility(View.VISIBLE);
+            TextView guideText1 = (TextView) findViewById(R.id.guide_text1);
+            TextView guideText2 = (TextView) findViewById(R.id.guide_text2);
+            TextView guideText3 = (TextView) findViewById(R.id.guide_text3);
+            {
+                guideText1.setText("주변 소리를 듣고 있어요!");
+                guideText2.setText("주변 소리 감지를 멈추려면");
+                guideText3.setText("종료 버튼을 눌러주세요!");
+            }
+
+            //Btn.setEnabled(false); //감지버튼 비활성화
+            startAudioClassification();
+            Toast toast = Toast.makeText(getApplicationContext(), "감지가 시작되었습니다.", Toast.LENGTH_SHORT);
+            toast.show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() { @Override public void run() { toast.cancel(); } }, 1000);
+        }
+    };
+
+    View.OnClickListener StopClick=new View.OnClickListener()
+    {
+        public void onClick(View v) //stop버튼 눌렀을때
+        {
+            stopAudioClassfication();
+            Button Btn = (Button) findViewById(R.id.end_button);
+            ProgressBar circle_bar = (ProgressBar) findViewById(R.id.circle_bar);
+            circle_bar.setVisibility(View.INVISIBLE);
+            TextView guideText1 = (TextView) findViewById(R.id.guide_text1);
+            TextView guideText2 = (TextView) findViewById(R.id.guide_text2);
+            TextView guideText3 = (TextView) findViewById(R.id.guide_text3);
+            {
+                guideText1.setText("주변 소리를 감지하고 있지 않습니다.");
+                guideText2.setText("주변 소리 감지를 시작하려면");
+                guideText3.setText("시작 버튼을 눌러주세요!");
+            }
+            Toast toast = Toast.makeText(getApplicationContext(), "감지가 종료되었습니다.", Toast.LENGTH_SHORT);
+            toast.show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() { @Override public void run() { toast.cancel(); } }, 1000);
+
+            // TextView DetectText = (TextView)findViewById(R.id.detect_text);
+            // Button testbtn = (Button)findViewById(R.id.detect_button);
+            // DetectText.setVisibility(v.INVISIBLE);
+
+        }
+    };
+    private void startAudioClassification()
+    {
+
+
+        if(mAudioClassifier != null) return;
+
+        try {
+            AudioClassifier classifier = AudioClassifier.createFromFile(this, MODEL_FILE);
+            TensorAudio audioTensor = classifier.createInputTensorAudio();
+
+            AudioRecord record = classifier.createAudioRecord();
+            record.startRecording();
+
+            Runnable run = new Runnable() {
+                @Override
+                public void run() {
+                    audioTensor.load(record);
+                    List<Classifications> output = classifier.classify(audioTensor);
+                    List<Category> filterModelOutput = output.get(0).getCategories();
+                    for(Category c : filterModelOutput) {
+                        if (c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(speech)==true)
+                        {
+                            f="speech";
+                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(2000);
+                            Log.d("tensorAudio_java", " label : " + c.getLabel() + " score : " + c.getScore());
+                            //Toast.makeText(getApplicationContext(), c.getLabel()+"소리입니다"+c.getScore(), Toast.LENGTH_SHORT).show();
+
+                            sendNotification();
+                        }
+                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(siren)==true)
+                        {
+                            f="siren";
+                            Log.d("test", " 경찰소리 : " + c.getLabel() + " score : " + c.getScore());
+                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(2000);
+
+                            sendNotification();
+
+                        }
+                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(car)==true)
+                        {
+                            f="car";
+                            Log.d("차경적", " 소리 : " + c.getLabel() + " score : " + c.getScore());
+                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(2000);
+
+                            sendNotification();
+                        }
+
+                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(dog)==true)
+                        {
+                            f="dog";
+                            Log.d("강아지", " 소리 : " + c.getLabel() + " score : " + c.getScore());
+                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(2000);
+
+                            sendNotification();
+                        }
+                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(baby)==true)
+                        {
+                            f="baby";
+                            Log.d("아기울음", " 소리 : " + c.getLabel() + " score : " + c.getScore());
+                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(2000);
+
+                            sendNotification();
+                        }
+                        /*
+                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(silence)==false)
+                        {
+
+                            Log.d("text", " 소리 : " + c.getLabel() + " score : " + c.getScore());
+                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(2000);
+                            Toast.makeText(getApplicationContext(), c.getLabel()+"소리입니다"+c.getScore(), Toast.LENGTH_SHORT).show();
+                            //sendNotification();
+                        }
+
+                         */
+
+                    }
+
+
+                    mHandler.postDelayed(this,classficationInterval);
+                }
+            };
+
+            mHandler.post(run);
+            mAudioClassifier = classifier;
+            mAudioRecord = record;
+        }catch (IOException e){
+            e.printStackTrace();
+        }
 
     }
 
-//    Button.OnClickListener StartClick = new View.OnClickListener()
-//    {
-//        public void onClick(View v)  //start버튼 눌렀을때
-//        {
-//
-//            ImageView LoadImg = (ImageView) findViewById(R.id.load_img); //iv.setImageResource(R.drawable.img);
-//            Glide.with(LoadImg).load(R.drawable.loading).into(LoadImg); //움직이는 로딩img
-//
-//            //Button Btn = (Button) findViewById(R.id.detect_button);
-//            //Btn.setEnabled(false); //감지버튼 비활성화
-//            LoadImg.setVisibility(v.VISIBLE);
-//
-//            startAudioClassification();
-//
-//            Toast.makeText(getApplicationContext(), "감지가 시작되었습니다.", Toast.LENGTH_SHORT).show();
-//        }
-//    };
-//
-//    View.OnClickListener StopClick=new View.OnClickListener()
-//    {
-//        public void onClick(View v) //stop버튼 눌렀을때
-//        {
-//            ImageView LoadImg = (ImageView)findViewById(R.id.load_img);
-//            Glide.with(LoadImg).load(R.drawable.loading).into(LoadImg);
-//            LoadImg.setVisibility(v.INVISIBLE);
-//
-//            stopAudioClassfication();
-//            Toast.makeText(getApplicationContext(), "감지가 종료되었습니다.", Toast.LENGTH_SHORT).show();
-//
-//            // TextView DetectText = (TextView)findViewById(R.id.detect_text);
-//            // Button testbtn = (Button)findViewById(R.id.detect_button);
-//            // DetectText.setVisibility(v.INVISIBLE);
-//
-//        }
-//    };
-//    private void startAudioClassification()
-//    {
-//
-//        if(mAudioClassifier != null) return;
-//
-//        try {
-//            AudioClassifier classifier = AudioClassifier.createFromFile(this, MODEL_FILE);
-//            TensorAudio audioTensor = classifier.createInputTensorAudio();
-//
-//            AudioRecord record = classifier.createAudioRecord();
-//            record.startRecording();
-//
-//            Runnable run = new Runnable() {
-//                @Override
-//                public void run() {
-//                    audioTensor.load(record);
-//                    List<Classifications> output = classifier.classify(audioTensor);
-//                    List<Category> filterModelOutput = output.get(0).getCategories();
-//                    for(Category c : filterModelOutput) {
-//                        if (c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(speech)==true)
-//                        {
-//                            f="speech";
-//                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-//                            vibrator.vibrate(2000);
-//                            Log.d("tensorAudio_java", " label : " + c.getLabel() + " score : " + c.getScore());
-//                            //Toast.makeText(getApplicationContext(), c.getLabel()+"소리입니다"+c.getScore(), Toast.LENGTH_SHORT).show();
-//
-//                            sendNotification();
-//                        }
-//                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(siren)==true)
-//                        {
-//                            f="siren";
-//                            Log.d("test", " 경찰소리 : " + c.getLabel() + " score : " + c.getScore());
-//                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-//                            vibrator.vibrate(2000);
-//
-//                            sendNotification();
-//
-//                        }
-//                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(car)==true)
-//                        {
-//                            f="car";
-//                            Log.d("차경적", " 소리 : " + c.getLabel() + " score : " + c.getScore());
-//                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-//                            vibrator.vibrate(2000);
-//
-//                            sendNotification();
-//                        }
-//
-//                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(dog)==true)
-//                        {
-//                            f="dog";
-//                            Log.d("강아지", " 소리 : " + c.getLabel() + " score : " + c.getScore());
-//                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-//                            vibrator.vibrate(2000);
-//
-//                            sendNotification();
-//                        }
-//                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(baby)==true)
-//                        {
-//                            f="baby";
-//                            Log.d("아기울음", " 소리 : " + c.getLabel() + " score : " + c.getScore());
-//                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-//                            vibrator.vibrate(2000);
-//
-//                            sendNotification();
-//                        }
-//                        /*
-//                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(silence)==false)
-//                        {
-//
-//                            Log.d("text", " 소리 : " + c.getLabel() + " score : " + c.getScore());
-//                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-//                            vibrator.vibrate(2000);
-//                            Toast.makeText(getApplicationContext(), c.getLabel()+"소리입니다"+c.getScore(), Toast.LENGTH_SHORT).show();
-//                            //sendNotification();
-//                        }
-//
-//                         */
-//
-//                    }
-//
-//
-//                    mHandler.postDelayed(this,classficationInterval);
-//                }
-//            };
-//
-//            mHandler.post(run);
-//            mAudioClassifier = classifier;
-//            mAudioRecord = record;
-//        }catch (IOException e){
-//            e.printStackTrace();
-//        }
-//
-//    }
-//
-//    private void stopAudioClassfication()
-//    {
-//        mHandler.removeCallbacksAndMessages(null);
-//        mAudioRecord.stop();
-//        mAudioRecord = null;
-//        mAudioClassifier = null;
-//    }
+    private void stopAudioClassfication()
+    {
+        super.onStop();
+        mHandler.removeCallbacksAndMessages(null);
+        mAudioClassifier = null;
+        if (mAudioRecord != null) {
+            mAudioRecord.stop();
+            mAudioRecord = null;
+        }
+    }
+
 
 
     @Override
     protected void onDestroy() {
-//        stopAudioClassfication();
+        stopAudioClassfication();
         super.onDestroy();
     }
 

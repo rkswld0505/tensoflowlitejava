@@ -13,5 +13,79 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <include  layout="@layout/toolbar_main"/>
+
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/circle_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="90dp"
+            android:indeterminate="true"
+            app:indicatorSize="300dp"
+            app:trackColor="@color/custom_green"
+            app:trackCornerRadius="10dp"
+            app:trackThickness="20dp" />
+
+        <TextView
+            android:id="@+id/guide_text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="-165dp"
+            android:textStyle="normal"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:text="@string/guide_text1" />
+
+        <TextView
+            android:id="@+id/guide_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="210dp"
+            android:layout_gravity="center"
+            android:textStyle="normal"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            android:text="@string/guide_text2" />
+
+        <TextView
+            android:id="@+id/guide_text3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:textStyle="normal"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            android:text="@string/guide_text3" />
+
+        <Button
+            android:id="@+id/start_button"
+            android:layout_width="115dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="-50dp"
+            android:layout_marginEnd="75dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:text="@string/start_text"/>
+
+        <Button
+            android:id="@+id/end_button"
+            android:layout_width="115dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="-50dp"
+            android:layout_marginStart="75dp"
+            android:background="@drawable/rectangle_outline"
+            android:text="@string/end_text"
+            android:textColor="@color/custom_green"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
