@@ -2,98 +2,100 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer"
+    android:id="@+id/constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:ignore="MissingConstraints">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar_main" />
+
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/circle_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="130dp"
+        android:indeterminate="true"
+        app:indicatorSize="300dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:trackColor="@color/custom_green"
+        app:trackCornerRadius="10dp"
+        app:trackThickness="20dp" />
+
+
+    <TextView
+        android:id="@+id/guide_text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="275dp"
+        android:text="@string/guide_text1"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/guide_text2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
+        android:text="@string/guide_text2"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/circle_bar" />
+
+    <TextView
+        android:id="@+id/guide_text3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/guide_text3"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        app:layout_constraintTop_toBottomOf="@+id/guide_text2" />
+
+    <Button
+        android:id="@+id/start_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="90dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rectangle"
+        android:text="@string/start_text"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/end_button"
+        app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/guide_text3"/>
 
-        <include layout="@layout/toolbar_main" />
+    <Button
+        android:id="@+id/end_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="90dp"
+        android:background="@drawable/rectangle_outline"
+        android:text="@string/end_text"
+        android:textColor="@color/custom_green"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/start_button"
+        app:layout_constraintTop_toTopOf="@id/guide_text3" />
 
-
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/circle_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            android:indeterminate="true"
-            app:indicatorSize="300dp"
-            app:trackColor="@color/custom_green"
-            app:trackCornerRadius="10dp"
-            app:trackThickness="20dp" />
-
-        <TextView
-            android:id="@+id/guide_text1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:layout_marginTop="-165dp"
-            android:text="@string/guide_text1"
-            android:textColor="@android:color/black"
-            android:textSize="15sp"
-            android:textStyle="normal" />
-
-        <TextView
-            android:id="@+id/guide_text2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="220dp"
-            android:textAlignment="center"
-            android:text="@string/guide_text2"
-            android:textColor="@android:color/black"
-            android:textSize="17sp"
-            android:textStyle="normal" />
-
-        <TextView
-            android:id="@+id/guide_text3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:layout_marginTop="10dp"
-            android:text="@string/guide_text3"
-            android:textColor="@android:color/black"
-            android:textSize="17sp"
-            android:textStyle="normal" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/start_button"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:background="@drawable/rectangle"
-                android:layout_marginStart="96dp"
-                android:text="@string/start_text"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/end_button"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/start_button"
-                android:background="@drawable/rectangle_outline"
-                android:text="@string/end_text"
-                android:textColor="@color/custom_green"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
