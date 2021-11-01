@@ -46,7 +46,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static final String MODEL_FILE = "yamnet.tflite";
     private static final float MINIMUM_DISPLAY_THRESHOLD = 0.6f;
