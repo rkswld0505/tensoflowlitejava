@@ -68,6 +68,7 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
     String f;
 
     int flag;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +76,10 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        ProgressBar circle_bar = (ProgressBar) findViewById(R.id.circle_bar);
-        circle_bar.setVisibility(View.INVISIBLE);
+        
+        //프로그레스바
+        init();
+        progressBar.setVisibility(View.VISIBLE);
 
         if (flag == 1) {
 //            ImageView LoadImg = (ImageView) findViewById(R.id.load_img); //iv.setImageResource(R.drawable.img);
@@ -102,8 +105,10 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
         public void onClick(View v)  //start버튼 눌렀을때
         {
             Button Btn = (Button) findViewById(R.id.start_button);
-            ProgressBar circle_bar = (ProgressBar) findViewById(R.id.circle_bar);
-            circle_bar.setVisibility(View.VISIBLE);
+            ProgressBar progressBar = (ProgressBar) findViewById(R.id.circle_bar2);
+            {
+                progressBar.setVisibility(View.VISIBLE);
+            }
             TextView guideText1 = (TextView) findViewById(R.id.guide_text1);
             TextView guideText2 = (TextView) findViewById(R.id.guide_text2);
             TextView guideText3 = (TextView) findViewById(R.id.guide_text3);
@@ -128,8 +133,10 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
         {
             stopAudioClassfication();
             Button Btn = (Button) findViewById(R.id.end_button);
-            ProgressBar circle_bar = (ProgressBar) findViewById(R.id.circle_bar);
-            circle_bar.setVisibility(View.INVISIBLE);
+            ProgressBar progressBar = (ProgressBar) findViewById(R.id.circle_bar2);
+            {
+                progressBar.setVisibility(View.INVISIBLE);
+            }
             TextView guideText1 = (TextView) findViewById(R.id.guide_text1);
             TextView guideText2 = (TextView) findViewById(R.id.guide_text2);
             TextView guideText3 = (TextView) findViewById(R.id.guide_text3);
@@ -361,5 +368,9 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
         NotificationCompat.Builder notifyBuilder = getNotificationBuilder();
         // Manager를 통해 notification 디바이스로 전달
         mNotificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
+    }
+
+    private void init() {
+        this.progressBar = findViewById(R.id.circle_bar1);
     }
 }
