@@ -68,7 +68,6 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
     String f;
 
     int flag;
-    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +75,7 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        
-        //프로그레스바
-        init();
-        progressBar.setVisibility(View.VISIBLE);
+
 
         if (flag == 1) {
 //            ImageView LoadImg = (ImageView) findViewById(R.id.load_img); //iv.setImageResource(R.drawable.img);
@@ -100,8 +96,7 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
         findViewById(R.id.end_button).setOnClickListener(StopClick);
     }
 
-    Button.OnClickListener StartClick = new View.OnClickListener()
-    {
+    Button.OnClickListener StartClick = new View.OnClickListener() {
         public void onClick(View v)  //start버튼 눌렀을때
         {
             Button Btn = (Button) findViewById(R.id.start_button);
@@ -123,12 +118,16 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
             Toast toast = Toast.makeText(getApplicationContext(), "감지가 시작되었습니다.", Toast.LENGTH_SHORT);
             toast.show();
             Handler handler = new Handler();
-            handler.postDelayed(new Runnable() { @Override public void run() { toast.cancel(); } }, 1000);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toast.cancel();
+                }
+            }, 1000);
         }
     };
 
-    View.OnClickListener StopClick=new View.OnClickListener()
-    {
+    View.OnClickListener StopClick = new View.OnClickListener() {
         public void onClick(View v) //stop버튼 눌렀을때
         {
             stopAudioClassfication();
@@ -148,7 +147,12 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
             Toast toast = Toast.makeText(getApplicationContext(), "감지가 종료되었습니다.", Toast.LENGTH_SHORT);
             toast.show();
             Handler handler = new Handler();
-            handler.postDelayed(new Runnable() { @Override public void run() { toast.cancel(); } }, 1000);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toast.cancel();
+                }
+            }, 1000);
 
             // TextView DetectText = (TextView)findViewById(R.id.detect_text);
             // Button testbtn = (Button)findViewById(R.id.detect_button);
@@ -156,11 +160,11 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
 
         }
     };
-    private void startAudioClassification()
-    {
+
+    private void startAudioClassification() {
 
 
-        if(mAudioClassifier != null) return;
+        if (mAudioClassifier != null) return;
 
         try {
             AudioClassifier classifier = AudioClassifier.createFromFile(this, MODEL_FILE);
@@ -175,49 +179,39 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
                     audioTensor.load(record);
                     List<Classifications> output = classifier.classify(audioTensor);
                     List<Category> filterModelOutput = output.get(0).getCategories();
-                    for(Category c : filterModelOutput) {
-                        if (c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(speech)==true)
-                        {
-                            f="speech";
+                    for (Category c : filterModelOutput) {
+                        if (c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(speech) == true) {
+                            f = "speech";
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(2000);
                             Log.d("tensorAudio_java", " label : " + c.getLabel() + " score : " + c.getScore());
                             //Toast.makeText(getApplicationContext(), c.getLabel()+"소리입니다"+c.getScore(), Toast.LENGTH_SHORT).show();
 
                             sendNotification();
-                        }
-                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(siren)==true)
-                        {
-                            f="siren";
+                        } else if (c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(siren) == true) {
+                            f = "siren";
                             Log.d("test", " 경찰소리 : " + c.getLabel() + " score : " + c.getScore());
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(2000);
 
                             sendNotification();
 
-                        }
-                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(car)==true)
-                        {
-                            f="car";
+                        } else if (c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(car) == true) {
+                            f = "car";
                             Log.d("차경적", " 소리 : " + c.getLabel() + " score : " + c.getScore());
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(2000);
 
                             sendNotification();
-                        }
-
-                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(dog)==true)
-                        {
-                            f="dog";
+                        } else if (c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(dog) == true) {
+                            f = "dog";
                             Log.d("강아지", " 소리 : " + c.getLabel() + " score : " + c.getScore());
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(2000);
 
                             sendNotification();
-                        }
-                        else if(c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(baby)==true)
-                        {
-                            f="baby";
+                        } else if (c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(baby) == true) {
+                            f = "baby";
                             Log.d("아기울음", " 소리 : " + c.getLabel() + " score : " + c.getScore());
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(2000);
@@ -240,21 +234,20 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
                     }
 
 
-                    mHandler.postDelayed(this,classficationInterval);
+                    mHandler.postDelayed(this, classficationInterval);
                 }
             };
 
             mHandler.post(run);
             mAudioClassifier = classifier;
             mAudioRecord = record;
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    private void stopAudioClassfication()
-    {
+    private void stopAudioClassfication() {
         super.onStop();
         mHandler.removeCallbacksAndMessages(null);
         mAudioClassifier = null;
@@ -263,7 +256,6 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
             mAudioRecord = null;
         }
     }
-
 
 
     @Override
@@ -368,9 +360,5 @@ public class MainActivity<MyProgressFromatter> extends AppCompatActivity {
         NotificationCompat.Builder notifyBuilder = getNotificationBuilder();
         // Manager를 통해 notification 디바이스로 전달
         mNotificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
-    }
-
-    private void init() {
-        this.progressBar = findViewById(R.id.circle_bar1);
     }
 }
