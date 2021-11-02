@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     String f;
 
     int vib;
-    int vibx;
+    int vibx=1000;
     int flag;
 
     @Override
@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                             f = "siren";
                             Log.d("test", " 경찰소리 : " + c.getLabel() + " score : " + c.getScore());
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(2000);
+                            vibrator.vibrate(vibx);
 
                             sendNotification();
 
@@ -240,21 +240,21 @@ public class MainActivity extends AppCompatActivity {
                             f = "car";
                             Log.d("차경적", " 소리 : " + c.getLabel() + " score : " + c.getScore());
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(2000);
+                            vibrator.vibrate(vibx);
 
                             sendNotification();
                         } else if (c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(dog) == true) {
                             f = "dog";
                             Log.d("강아지", " 소리 : " + c.getLabel() + " score : " + c.getScore());
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(2000);
+                            vibrator.vibrate(vibx);
 
                             sendNotification();
                         } else if (c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(baby) == true) {
                             f = "baby";
                             Log.d("아기울음", " 소리 : " + c.getLabel() + " score : " + c.getScore());
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(2000);
+                            vibrator.vibrate(vibx);
 
                             sendNotification();
                         }
@@ -331,7 +331,12 @@ public class MainActivity extends AppCompatActivity {
     private NotificationCompat.Builder getNotificationBuilder() {
         flag = 1;
 
-        Bitmap mLargicon= BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);
+        Bitmap mLargicon= BitmapFactory.decodeResource(getResources(),R.drawable.dogbark); //이거 test이미지인데 바꾸셈 speech 이미지 아무꺼나
+        Bitmap sirenbig= BitmapFactory.decodeResource(getResources(),R.drawable.siren);
+        Bitmap carbig= BitmapFactory.decodeResource(getResources(),R.drawable.honking);
+        Bitmap dogbig= BitmapFactory.decodeResource(getResources(),R.drawable.dogbark);
+        Bitmap babybig= BitmapFactory.decodeResource(getResources(),R.drawable.babycry);
+
         Intent intent = new Intent(this, MainActivity.class)
 
                 .setAction(Intent.ACTION_MAIN)
@@ -345,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
             NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                     .setContentTitle("주위에서 말소리가 들려요")
                     .setContentText("")
-                    .setSmallIcon(R.drawable.dogbark)
+                    .setSmallIcon(R.drawable.dogbark) //smallicon 이 이미지를 이어센스 앱이미지 넣으면됨 밑에도 똑같이
                     .setContentIntent(pendingIntent)
                     .setLargeIcon(mLargicon)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -357,6 +362,7 @@ public class MainActivity extends AppCompatActivity {
                     .setContentTitle("사이렌")
                     .setContentText("주위에 사이렌소리가 들러요")
                     .setSmallIcon(R.drawable.siren)
+                    .setLargeIcon(sirenbig)
                     .setContentIntent(pendingIntent)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setAutoCancel(true);
@@ -367,6 +373,7 @@ public class MainActivity extends AppCompatActivity {
                     .setContentTitle("차경적")
                     .setContentText("주위에 차경적소리가 들러요")
                     .setSmallIcon(R.drawable.honking)
+                    .setLargeIcon(carbig)
                     .setContentIntent(pendingIntent)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setAutoCancel(true);
@@ -377,6 +384,7 @@ public class MainActivity extends AppCompatActivity {
                     .setContentTitle("강아지")
                     .setContentText("강아지가 짖고있어요")
                     .setSmallIcon(R.drawable.dogbark)
+                    .setLargeIcon(dogbig)
                     .setContentIntent(pendingIntent)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setAutoCancel(true);
@@ -387,6 +395,7 @@ public class MainActivity extends AppCompatActivity {
                     .setContentTitle("아기")
                     .setContentText("아기가 울고있어요")
                     .setSmallIcon(R.drawable.babycry)
+                    .setLargeIcon(babybig)
                     .setContentIntent(pendingIntent)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setAutoCancel(true);
