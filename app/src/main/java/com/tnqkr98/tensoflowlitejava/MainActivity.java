@@ -6,13 +6,17 @@ import androidx.core.content.ContextCompat;
 import androidx.core.os.HandlerCompat;
 import androidx.appcompat.widget.Toolbar;
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioRecord;
 import android.os.Build;
@@ -27,6 +31,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -67,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
     String dog = "Dog";
     String f;
 
+    int vib;
+    int vibx;
     int flag;
 
     @Override
@@ -78,8 +85,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (flag == 1) {
-//            ImageView LoadImg = (ImageView) findViewById(R.id.load_img); //iv.setImageResource(R.drawable.img);
-//            Glide.with(LoadImg).load(R.drawable.loading).into(LoadImg);
+
+//            ImageView LoadImg = (ImageView) findViewById(R.id.circle_bar2); //iv.setImageResource(R.drawable.img);
+//            ProgressBar LoadBar = (ProgressBar) findViewById(R.id.circle_bar2);
+//            Glide.with(LoadBar).load(R.id.circle_bar2).into(LoadImg);
 
         }
         HandlerThread handlerThread = new HandlerThread("backgroundThread");
@@ -94,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
         findViewById(R.id.start_button).setOnClickListener(StartClick); // 스타트 리스너
         findViewById(R.id.end_button).setOnClickListener(StopClick);
+        findViewById(R.id.setting_menu).setOnClickListener(SettingClick);
     }
 
     Button.OnClickListener StartClick = new View.OnClickListener() {
@@ -160,6 +170,36 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+    
+    //셋팅 다이얼로그부분
+    View.OnClickListener SettingClick=new View.OnClickListener()
+    {
+        public void onClick(View v)
+        {
+            final EditText editText=new EditText(MainActivity.this);
+
+            AlertDialog.Builder vibdig=new AlertDialog.Builder(MainActivity.this);
+            vibdig.setTitle("진동");
+            vibdig.setView(editText);
+
+            vibdig.setPositiveButton("입력", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    vib= Integer.parseInt(editText.getText().toString());
+                    vibx=vib*1000;
+                }
+            });
+            vibdig.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+
+                }
+            });
+            vibdig.show();
+        }
+    };
 
     private void startAudioClassification() {
 
@@ -183,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
                         if (c.getScore() > MINIMUM_DISPLAY_THRESHOLD && c.getLabel().equals(speech) == true) {
                             f = "speech";
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(2000);
+                            vibrator.vibrate(vibx);
                             Log.d("tensorAudio_java", " label : " + c.getLabel() + " score : " + c.getScore());
                             //Toast.makeText(getApplicationContext(), c.getLabel()+"소리입니다"+c.getScore(), Toast.LENGTH_SHORT).show();
 
@@ -290,6 +330,8 @@ public class MainActivity extends AppCompatActivity {
     // Notification Builder를 만드는 메소드
     private NotificationCompat.Builder getNotificationBuilder() {
         flag = 1;
+
+        Bitmap mLargicon= BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);
         Intent intent = new Intent(this, MainActivity.class)
 
                 .setAction(Intent.ACTION_MAIN)
@@ -305,6 +347,7 @@ public class MainActivity extends AppCompatActivity {
                     .setContentText("")
                     .setSmallIcon(R.drawable.dogbark)
                     .setContentIntent(pendingIntent)
+                    .setLargeIcon(mLargicon)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setAutoCancel(true);
 
