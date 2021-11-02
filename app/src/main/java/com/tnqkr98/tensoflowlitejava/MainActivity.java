@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     String f;
 
     int vib;
-    int vibx=1000;
+    int vibx;
     int flag;
 
     @Override
@@ -85,7 +85,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (flag == 1) {
-            ProgressBar progressBar2 = (ProgressBar) findViewById(R.id.circle_bar2);
+
+//            ImageView LoadImg = (ImageView) findViewById(R.id.circle_bar2); //iv.setImageResource(R.drawable.img);
+//            ProgressBar LoadBar = (ProgressBar) findViewById(R.id.circle_bar2);
+//            Glide.with(LoadBar).load(R.id.circle_bar2).into(LoadImg);
+
         }
         HandlerThread handlerThread = new HandlerThread("backgroundThread");
         handlerThread.start();
@@ -329,6 +333,7 @@ public class MainActivity extends AppCompatActivity {
 
         Bitmap mLargicon= BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);
         Intent intent = new Intent(this, MainActivity.class)
+
                 .setAction(Intent.ACTION_MAIN)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .addCategory(Intent.CATEGORY_LAUNCHER);

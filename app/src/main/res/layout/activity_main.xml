@@ -9,7 +9,8 @@
 
     <include
         android:id="@+id/include"
-        layout="@layout/toolbar_main" />
+        layout="@layout/toolbar_main">
+    </include>
 
     <ProgressBar
         style="?android:attr/progressBarStyle"
