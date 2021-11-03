@@ -7,6 +7,7 @@ import androidx.core.os.HandlerCompat;
 import androidx.appcompat.widget.Toolbar;
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -29,11 +30,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,13 +79,18 @@ public class MainActivity extends AppCompatActivity {
     int vibx=1000;
     int flag;
 
+    Dialog dilaog01;
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        dilaog01 = new Dialog(MainActivity.this);       // Dialog 초기화
+        dilaog01.requestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀 제거
+        dilaog01.setContentView(R.layout.seek_bar);
 
         if (flag == 1) {
 
@@ -176,6 +184,8 @@ public class MainActivity extends AppCompatActivity {
     {
         public void onClick(View v)
         {
+            showDialog01();
+            /*
             final EditText editText=new EditText(MainActivity.this);
 
             AlertDialog.Builder vibdig=new AlertDialog.Builder(MainActivity.this);
@@ -198,6 +208,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             vibdig.show();
+        }
+        */
         }
     };
 
@@ -405,8 +417,52 @@ public class MainActivity extends AppCompatActivity {
 
         return null;
     }
+    public void showDialog01() {
 
-    // Notification을 보내는 메소드
+        dilaog01.show(); // 다이얼로그 띄우기
+        final Button ok = (Button) dilaog01.findViewById(R.id.ok);
+        final Button cancel = (Button) dilaog01.findViewById(R.id.cancel);
+        SeekBar seekBar = (SeekBar) dilaog01.findViewById(R.id.sbar);
+        TextView txtItem2 = (TextView)dilaog01.findViewById(R.id.txtItem2);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+            {
+                txtItem2.setText(progress+"초");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                vib = seekBar.getProgress();
+            }
+        });
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                vibx = vib * 1000;
+                dilaog01.dismiss();
+            }
+        });
+
+        // 취소 버튼
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dilaog01.dismiss();
+            }
+
+        });
+    }
+        // Notification을 보내는 메소드
     public void sendNotification() {
         // Builder 생성
         NotificationCompat.Builder notifyBuilder = getNotificationBuilder();
