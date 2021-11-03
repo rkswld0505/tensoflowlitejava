@@ -360,9 +360,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (f.equals("speech")) {
             NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
-                    .setContentTitle("주위에서 말소리가 들려요")
-                    .setContentText("")
-                    .setSmallIcon(R.drawable.dogbark) //smallicon 이 이미지를 이어센스 앱이미지 넣으면됨 밑에도 똑같이
+                    .setContentTitle("주의!")
+                    .setContentText("말하는소리가 들리고 있어요!")
+                    .setSmallIcon(R.mipmap.ic_launcher) //smallicon 이 이미지를 이어센스 앱이미지 넣으면됨 밑에도 똑같이
                     .setContentIntent(pendingIntent)
                     .setLargeIcon(mLargicon)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -371,9 +371,9 @@ public class MainActivity extends AppCompatActivity {
             return notifyBuilder;
         } else if (f.equals("siren")) {
             NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
-                    .setContentTitle("사이렌")
-                    .setContentText("주위에 사이렌소리가 들러요")
-                    .setSmallIcon(R.drawable.siren)
+                    .setContentTitle("주의!")
+                    .setContentText("사이렌소리가 들리고 있어요!")
+                    .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(sirenbig)
                     .setContentIntent(pendingIntent)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -382,9 +382,9 @@ public class MainActivity extends AppCompatActivity {
             return notifyBuilder;
         } else if (f.equals("car")) {
             NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
-                    .setContentTitle("차경적")
-                    .setContentText("주위에 차경적소리가 들러요")
-                    .setSmallIcon(R.drawable.honking)
+                    .setContentTitle("주의!")
+                    .setContentText("차 경적 소리가 들리고 있어요!")
+                    .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(carbig)
                     .setContentIntent(pendingIntent)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -393,9 +393,9 @@ public class MainActivity extends AppCompatActivity {
             return notifyBuilder;
         } else if (f.equals("dog")) {
             NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
-                    .setContentTitle("강아지")
-                    .setContentText("강아지가 짖고있어요")
-                    .setSmallIcon(R.drawable.dogbark)
+                    .setContentTitle("주의!")
+                    .setContentText("강아지가 짖는 소리가 들려요!")
+                    .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(dogbig)
                     .setContentIntent(pendingIntent)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -404,9 +404,9 @@ public class MainActivity extends AppCompatActivity {
             return notifyBuilder;
         } else if (f.equals("baby")) {
             NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
-                    .setContentTitle("아기")
-                    .setContentText("아기가 울고있어요")
-                    .setSmallIcon(R.drawable.babycry)
+                    .setContentTitle("주의!")
+                    .setContentText("아기 우는 소리가 들리고 있어요!")
+                    .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(babybig)
                     .setContentIntent(pendingIntent)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
