@@ -1,11 +1,13 @@
 package com.tnqkr98.tensoflowlitejava;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.os.HandlerCompat;
 import androidx.appcompat.widget.Toolbar;
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
@@ -91,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
         dilaog01 = new Dialog(MainActivity.this);       // Dialog 초기화
         dilaog01.requestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀 제거
         dilaog01.setContentView(R.layout.seek_bar);
+        Window window = dilaog01.getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
         if (flag == 1) {
 
