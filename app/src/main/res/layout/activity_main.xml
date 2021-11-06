@@ -12,6 +12,84 @@
         layout="@layout/toolbar_main">
     </include>
 
+
+    <TextView
+        android:id="@+id/sound_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sound_text"
+        android:layout_marginBottom="60dp"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:autoSizeTextType="uniform"
+        android:visibility="invisible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ImageView
+        android:id="@+id/speech_sound"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="230dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        android:src="@drawable/speech"/>
+
+    <ImageView
+        android:id="@+id/siren_sound"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="230dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        android:src="@drawable/siren"/>
+
+    <ImageView
+        android:id="@+id/car_sound"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="230dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        android:src="@drawable/honking"/>
+
+    <ImageView
+        android:id="@+id/dogbark_sound"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="230dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        android:src="@drawable/dogbark"/>
+
+    <ImageView
+        android:id="@+id/baby_sound"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="230dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        android:src="@drawable/babycry"/>
+
     <ProgressBar
         style="?android:attr/progressBarStyle"
         android:id="@+id/circle_bar1"
@@ -45,7 +123,7 @@
         android:layout_marginBottom="150dp"
         android:textAlignment="center"
         android:textColor="@android:color/black"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:textStyle="normal"
         android:autoSizeTextType="uniform"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -61,7 +139,7 @@
         android:text="@string/guide_text2"
         android:textAlignment="center"
         android:textColor="@android:color/black"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:textStyle="normal"
         android:autoSizeTextType="uniform"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -75,7 +153,7 @@
         android:text="@string/guide_text3"
         android:textAlignment="center"
         android:textColor="@android:color/black"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:textStyle="normal"
         android:autoSizeTextType="uniform"
         app:layout_constraintTop_toBottomOf="@+id/guide_text2" />
